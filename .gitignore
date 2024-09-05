@@ -1,2 +1,6 @@
+# Folders
 .venv
+experiment
+
+# Files
 .env
