@@ -1,0 +1,1 @@
+To activate environment use `source activate ./venv` or `conda activate ./venv`
