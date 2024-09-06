@@ -6,6 +6,8 @@ from src.mcqGenerator.utils.readFiles import read_file
 from src.mcqGenerator.utils.getTableData import get_table_data
 
 import streamlit as st
+from PIL import Image
+
 from langchain_community.callbacks.manager import get_openai_callback
 from src.mcqGenerator.mcqGenerator import generate_evaluate_chain
 
@@ -13,15 +15,22 @@ from src.mcqGenerator.mcqGenerator import generate_evaluate_chain
 with open(r'response.json','r') as file:
     RESPONSE_JSON = json.load(file)
 
+# Set the title & favicon of the tab
+favicon = Image.open("data/logo.png")
+st.set_page_config(page_title="QuizMaster AI", page_icon = favicon, initial_sidebar_state = 'auto')
+
 st.write("Streamlit version:", st.__version__)
 
 # Title for the app
-st.title("MCQ Creator App using Langchain & OpenAI")
+st.title("QuizMaster AI")
+
+# Cover line for the app
+st.write("An AI-powered app built using GPT-4o, Langchain, Streamlit & Pandas to generate dynamic MCQs from user-provided documents.")
 
 # Create a form using st.form
 with st.form("user_inputs"):
     # file upload
-    uploaded_file = st.file_uploader("Upload a .pdf or .txt file")
+    uploaded_file = st.file_uploader("Upload a PDF or txt file")
 
     # input fields
     mcq_count = st.number_input("No. of MCQs", min_value=3, max_value=50)
@@ -67,21 +76,24 @@ with st.form("user_inputs"):
                 if isinstance(response, dict):
                     quiz = response.get("quiz", None)
 
-                    if quiz:
+                    if quiz and quiz.startswith('```json\n'):
+                        quiz = quiz.strip('```json\n')
 
-                        if isinstance(quiz, str) and quiz.strip():
-                            table_data = get_table_data(quiz)
+                        if quiz:
 
-                            if table_data:
-                                df = pd.DataFrame(table_data)
-                                df.index = df.index + 1
-                                st.table(df)
-                                # Formating the review text
-                                review_text = response["review"].replace("###", "").replace("**", "").replace("***", "")
-                                st.text_area(label="Review", value=review_text, height=120)
+                            if isinstance(quiz, str) and quiz.strip():
+                                table_data = get_table_data(quiz)
+
+                                if table_data:
+                                    df = pd.DataFrame(table_data)
+                                    df.index = df.index + 1
+                                    st.table(df)
+                                    # Formating the review text
+                                    review_text = response["review"].replace("###", "").replace("**", "").replace("***", "")
+                                    st.text_area(label="Review", value=review_text, height=150)
+                                else:
+                                    st.error("Error in the table data")
                             else:
-                                st.error("Error in the table data")
+                                st.error("Quiz is none")
                         else:
-                            st.error("Quiz is none")
-                    else:
-                        st.write(response)
+                            st.write(response)
