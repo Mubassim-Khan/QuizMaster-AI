@@ -1,15 +1,9 @@
 # Importing base & system packages
 import os
-import json
-import pandas as pd
-import traceback
 from dotenv import load_dotenv
 
-from src.mcqGenerator.utils import read_file,get_table_data
-from src.mcqGenerator.logs import logging
-
-# Imporing packages from langchain
-from langchain.llms import ChatOpenAI
+# Importing packages from langchain
+from langchain_community.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.chains import SequentialChain
@@ -44,7 +38,7 @@ quiz_chain=LLMChain(llm=llm, prompt=quiz_generation_prompt, output_key="quiz", v
 # 2nd Template for evaluating the quiz & its difficulty
 TEMPLATE_2="""
 You are an expert english grammarian and writer. Given a Multiple Choice Quiz for {subject} students.\
-You need to evaluate the complexity of the question and give a complete analysis of the quiz. Only use at max 50 words for complexity analysis.
+You need to evaluate the complexity of the question and give a review of the quiz. Only use at max 50 words for complexity analysis. Do not include anything like corrected mcqs, quiz analysis etc. Just give complexity analysis & review.
 if the quiz is not at per with the cognitive and analytical abilities of the students,\
 update the quiz questions which needs to be changed and change the tone such that it perfectly fits the student abilities
 Quiz_MCQs:
