@@ -1,6 +1,8 @@
 # Folders
 .venv
 experiment
+__pycache__
+mcqGenrator.egg-info/*
 
 # Files
 .env

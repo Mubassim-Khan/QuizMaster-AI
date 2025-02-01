@@ -1,3 +1,4 @@
+LICENSE
 README.md
 setup.py
 mcqGenrator.egg-info/PKG-INFO
@@ -7,3 +8,5 @@ mcqGenrator.egg-info/requires.txt
 mcqGenrator.egg-info/top_level.txt
 src/__init__.py
 src/mcqGenerator/__init__.py
+src/mcqGenerator/logs.py
+src/mcqGenerator/mcqGenerator.py
